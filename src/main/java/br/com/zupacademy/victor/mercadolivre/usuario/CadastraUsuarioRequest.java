@@ -9,10 +9,10 @@ public class CadastraUsuarioRequest {
 
     @NotBlank(message = "Email Obrigatório!")
     @Email(message = "Email deve ser em formato válido!")
-    private String email;
+    final String email;
     @NotBlank(message = "Senha Obrigatória!")
     @Length(min = 6, message = "senha deve conter no minimo 6 caracteres")
-    private String senha;
+    final String senha;
 
     public CadastraUsuarioRequest(String email, String senha) {
         this.email = email;
@@ -20,5 +20,9 @@ public class CadastraUsuarioRequest {
     }
     public Usuario toModel() {
         return new Usuario(email, senha);
+    }
+
+    public String getEmail() {
+        return email;
     }
 }

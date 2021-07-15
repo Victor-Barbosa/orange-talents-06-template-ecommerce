@@ -16,7 +16,7 @@ public class Usuario {
     @Column(updatable = false)
     private LocalDateTime horaDoCadastro = LocalDateTime.now();
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
     @Column(nullable = false)
     @Size(min = 6)
