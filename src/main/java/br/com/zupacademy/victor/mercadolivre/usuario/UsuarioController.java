@@ -11,7 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/vi/usuario")
+@RequestMapping("/api/v1/usuario")
 public class UsuarioController {
 
     @Autowired
