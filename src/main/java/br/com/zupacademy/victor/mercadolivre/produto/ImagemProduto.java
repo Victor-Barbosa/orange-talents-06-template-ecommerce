@@ -27,6 +27,10 @@ public class ImagemProduto {
         this.link = link;
     }
 
+    public String getLink() {
+        return link;
+    }
+
     @Deprecated
     public ImagemProduto() {
     }

@@ -8,6 +8,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Entity
 public class Opiniao {
@@ -34,8 +35,41 @@ public class Opiniao {
         this.produto = produto;
     }
 
+    public int getNota() {
+        return nota;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public Produto getProduto() {
+        return produto;
+    }
+
     @Deprecated
     public Opiniao() {
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Opiniao)) return false;
+        Opiniao opiniao = (Opiniao) o;
+        return Objects.equals(titulo, opiniao.titulo) && Objects.equals(descricao, opiniao.descricao) && Objects.equals(usuario, opiniao.usuario) && Objects.equals(produto, opiniao.produto);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(titulo, descricao, usuario, produto);
     }
 }
