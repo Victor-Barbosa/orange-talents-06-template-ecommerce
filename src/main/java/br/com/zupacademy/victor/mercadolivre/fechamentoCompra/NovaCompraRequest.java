@@ -10,12 +10,12 @@ public class NovaCompraRequest {
     @NotNull
     private Long idProduto;
     @NotNull
-    private GatewayPagamento gateway;
+    private GatewayPagamento gatewayPagamento;
 
-    public NovaCompraRequest(int quantidade, Long idProduto, GatewayPagamento gateway) {
+    public NovaCompraRequest(int quantidade, Long idProduto, GatewayPagamento gatewayPagamento) {
         this.quantidade = quantidade;
         this.idProduto = idProduto;
-        this.gateway = gateway;
+        this.gatewayPagamento = gatewayPagamento;
     }
 
     public int getQuantidade() {
@@ -27,6 +27,6 @@ public class NovaCompraRequest {
     }
 
     public GatewayPagamento getGateway() {
-        return gateway;
+        return gatewayPagamento;
     }
 }

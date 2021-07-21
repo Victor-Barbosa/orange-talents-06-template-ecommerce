@@ -80,6 +80,7 @@ public class Produto {
 
     }
 
+
     public void associaImagens(Set<String> links) {
         Set<ImagemProduto> imagens = links.stream().map(link -> new ImagemProduto(this, link)).collect(Collectors.toSet());
         this.imagens.addAll(imagens);

@@ -20,7 +20,7 @@ public class ValidationErrorHandler {
     private MessageSource messageSource;
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler({MethodArgumentNotValidException.class})
     public ValidationErrorsOutputDto handlerValidationError(MethodArgumentNotValidException exception){
 
         List<ObjectError> globaErrors = exception.getBindingResult().getGlobalErrors();

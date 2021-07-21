@@ -1,5 +1,6 @@
 package br.com.zupacademy.victor.mercadolivre.fechamentoCompra;
 
+import br.com.zupacademy.victor.mercadolivre.compartilhado.Emails;
 import br.com.zupacademy.victor.mercadolivre.produto.Produto;
 import br.com.zupacademy.victor.mercadolivre.produto.ProdutoRepository;
 import br.com.zupacademy.victor.mercadolivre.usuario.Usuario;
@@ -18,7 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1/fechacompra")
+@RequestMapping("/api/v1/fechacompra1")
 public class FechaCompraParte1Controller {
 
     @Autowired
@@ -30,6 +31,9 @@ public class FechaCompraParte1Controller {
     @Autowired
     private CompraRepository compraRepository;
 
+    @Autowired
+    private Emails emails;
+
     private Produto buscaProdutoPorId(Long id) {
         return produtoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Não existe produto com esse id"));
@@ -38,29 +42,23 @@ public class FechaCompraParte1Controller {
     @PostMapping
     public String novaCompra(@Valid @RequestBody NovaCompraRequest novaCompraRequest, @AuthenticationPrincipal Usuario usuarioLogado,
                              UriComponentsBuilder uriComponentsBuilder) throws BindException {
+
         Usuario usuario = usuarioRepository.getById(usuarioLogado.getId());
         Produto produto = buscaProdutoPorId(novaCompraRequest.getIdProduto());
 
         int quantidade = novaCompraRequest.getQuantidade();
         boolean abateu = produto.abateEstoque(novaCompraRequest.getQuantidade());
+
         if (abateu){
             GatewayPagamento gateway = novaCompraRequest.getGateway();
-            Compra novaCompra = new Compra(usuario, produto, quantidade, novaCompraRequest.getGateway());
+            Compra novaCompra = new Compra(usuario, produto, quantidade, gateway);
             compraRepository.save(novaCompra);
-            if (gateway.equals(GatewayPagamento.pagseguro)){
-                String urlRetornoPagSeguro = String.valueOf(uriComponentsBuilder.path("retorno-pagseguro/{id}")
-                        .buildAndExpand(novaCompra.getId().toString()));
+            emails.novaCompra(novaCompra);
 
-                return  "pagseguro.com/" + novaCompra.getId() + "?redirectUrl=" + urlRetornoPagSeguro;
+            return novaCompra.urlRedirecionamento(uriComponentsBuilder);
 
-            } else {
-                String urlRetornoPayPal = String.valueOf(uriComponentsBuilder.path("retorno-paypal/{id}")
-                        .buildAndExpand(novaCompra.getId().toString()));
-
-                return  "paypal.com/" + novaCompra.getId() + "?redirectUrl=" + urlRetornoPayPal;
-
-            }
         }
+
         BindException problemaComEstoque = new BindException(novaCompraRequest, "novaCompraRequest");
         problemaComEstoque.reject(null, "Não foi possivel realizar a compra por conta do estoque!");
 
